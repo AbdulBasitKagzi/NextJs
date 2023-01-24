@@ -1,18 +1,16 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { useEffect } from 'react'
+import React from 'react'
+import Home from '..'
+import EventItem from '../../components/EventItem'
+import Layout from '../../components/Layout'
 
-import EventItem from '../components/EventItem'
 
-import Layout from '../components/Layout'
 
-export default function Home({ events }) {
+export default function Events({ events }) {
   console.log('events--->', events)
   return (
     <div>
       <Layout>
-        Upcoming events
-
+         Events
         {events?.map((evt) => {
           return <>
             <EventItem evt={evt} />
