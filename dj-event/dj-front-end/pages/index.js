@@ -1,19 +1,17 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { useEffect } from 'react'
 
 import EventItem from '../components/EventItem'
-
+import { API_URL } from '../components/configs'
 import Layout from '../components/Layout'
 
 export default function Home({ events }) {
-  console.log('events--->', events)
+  console.log(API_URL)
+  console.log('events--->', events.data)
   return (
     <div>
       <Layout>
         Upcoming events
 
-        {events?.map((evt) => {
+        {events.data.length && events.data?.map((evt) => {
           return <>
             <EventItem evt={evt} />
           </>
@@ -28,7 +26,8 @@ export default function Home({ events }) {
 
 // run each time when user visits the homepage
 export async function getServerSideProps() {
-  const res = await fetch('http://localhost:3000/api/events')
+  console.log(API_URL)
+  const res = await fetch(`${API_URL}/events`)
   const events = await res.json()
 
   return {

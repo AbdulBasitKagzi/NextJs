@@ -1,7 +1,8 @@
 import React from 'react'
-import Home from '..'
 import EventItem from '../../components/EventItem'
 import Layout from '../../components/Layout'
+import { API_URL } from '../../components/configs'
+
 
 
 
@@ -11,10 +12,10 @@ export default function Events({ events }) {
     <div>
       <Layout>
          Events
-        {events?.map((evt) => {
+        {events.data?.map((evt) => {
           return <>
             <EventItem evt={evt} />
-          </>
+          </> 
 
         })}
       </Layout>
@@ -26,7 +27,7 @@ export default function Events({ events }) {
 
 // run each time when user visits the homepage
 export async function getServerSideProps() {
-  const res = await fetch('http://localhost:3000/api/events')
+  const res = await fetch(`${API_URL}/events`)
   const events = await res.json()
 
   return {

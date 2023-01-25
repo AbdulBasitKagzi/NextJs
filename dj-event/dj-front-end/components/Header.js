@@ -19,6 +19,11 @@ function Header() {
               <p>Events</p>
             </Link>
           </li>
+          <li>
+            <Link href='/event/add'>
+              <p>Add Events</p>
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
