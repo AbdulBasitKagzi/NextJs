@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 
 export default function EventItem({ evt }) {
-  console.log('evt--->>',evt)
+  
   return (
     <div className={styles.event}>
       <div className={styles.img}>

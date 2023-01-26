@@ -10,10 +10,8 @@ import { ToastContainer, toast } from 'react-toastify'
 
 function MyEvent({ events }) {
     const router = useRouter()
-    console.log('events-->', events)
 
     const deleteEvent = async (e) => {
-        console.log(events)
         e.preventDefault()
 
         if (confirm("Are you you sure you want to delete the event")) {
@@ -29,6 +27,8 @@ function MyEvent({ events }) {
     }
     return (
         <Layout>
+            <Link href={`/event/edit/${events.attributes.slug}`}>Edit Event</Link>
+
             <button onClick={deleteEvent}>Delete Event</button>
             <ToastContainer />
             <div className={styles.event}>
@@ -74,7 +74,7 @@ export async function getStaticPaths() {
     const paths = events.data.map((evt) => ({
         params: { slug: evt.attributes.slug }
     }))
-    console.log('paths-->', paths)
+
 
     return {
         paths,
@@ -84,11 +84,10 @@ export async function getStaticPaths() {
 
 
 export async function getStaticProps({ params: { slug } }) {
-    console.log('slug--->', slug)
+
     const res = await fetch(`${API_URL}/events?filters[slug][$eq]=${slug}`)
     const events = await res.json()
 
-    console.log("data--->", events)
     // const event = events.data.filter((evt) => evt.attributes.slug !== slug)
     // console.log('remaining evnet--->', event)
     return {
