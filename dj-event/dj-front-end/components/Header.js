@@ -6,11 +6,17 @@ import { useContext } from 'react'
 
 function Header() {
 
-  const { user } = useContext(AuthContext)
+  const { user, logout } = useContext(AuthContext)
 
   useEffect(() => {
     console.log('user', user)
+
   }, [user])
+
+  const handleLogout = ((e) => {
+    e.preventDefault()
+    logout()
+  })
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -35,9 +41,9 @@ function Header() {
                   </Link>
                 </li>
                 <li>
-                  <Link href='/event/add'>
+                  <button onClick={(e) => handleLogout(e)}>
                     <p>Logout</p>
-                  </Link>
+                  </button>
                 </li>
               </>
             ) : (

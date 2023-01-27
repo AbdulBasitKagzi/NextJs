@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { createContext, useState } from "react";
 import { NEXT_URL } from "../components/configs";
 
@@ -6,6 +7,7 @@ const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [error, setError] = useState(null)
+    const router = useRouter()
 
     const register = (user) => {
         console.log(user)
@@ -31,11 +33,23 @@ export const AuthProvider = ({ children }) => {
             setError(data.error.message)
         } else {
             setUser(data)
+            router.push('/')
         }
     }
 
-    const logout = (user) => {
+    const logout = async (user) => {
         console.log(user)
+
+        const res = await fetch(`${NEXT_URL}/api/events/Logout`, {
+            method: 'POST',
+        })
+        const data = await res.json()
+
+        console.log('logoutdata--->', data)
+        if (data.Message === "Success") {
+            setUser(null)
+            router.push('/')
+        }
     }
 
     return (

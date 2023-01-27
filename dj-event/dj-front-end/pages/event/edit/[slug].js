@@ -172,7 +172,7 @@ function Editevent({ event }) {
 
 
 export async function getServerSideProps({ params: { slug }, req }) {
-    console.log('cookie-->', req.headers.cookie)
+
     const res = await fetch(`${API_URL}/events?filters[slug][$eq]=${slug}`)
     const event = await res.json()
 
