@@ -13,9 +13,11 @@ export async function getServerSideProps(context: any) {
     //
     // Then you can execute queries against your database like so:
     // db.find({}) or any of the MongoDB Node Driver commands
+    const res = await fetch(`${process.env.API_URL}/api/users`);
+    const data = await res.json();
 
     return {
-      props: { isConnected: true },
+      props: { isConnected: true, data: data },
     };
   } catch (e) {
     console.error(e);
@@ -27,6 +29,7 @@ export async function getServerSideProps(context: any) {
 
 export default function Home({
   isConnected,
+  data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const createName = async (e: any) => {
     e.preventDefault();
@@ -61,6 +64,9 @@ export default function Home({
         <h1 className="title">
           Welcome to <a href="https://nextjs.org">Next.js with MongoDB!</a>
         </h1>
+        {data?.map((data: any) => (
+          <h5>{data.name}</h5>
+        ))}
 
         {isConnected ? (
           <h2 className="subtitle">You are connected to MongoDB</h2>
