@@ -17,7 +17,7 @@ export default async (req, res) => {
         const db = client.db("chat");
 
         const Users = await db.collection('users').find({}).sort({ metacritic: -1 })
-            .limit(10)
+            .limit(30)
             .toArray();
         return res.json(Users)
     } catch (error) {

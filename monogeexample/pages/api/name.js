@@ -6,12 +6,10 @@ export default async (req, res) => {
         const client = await clientPromise;
 
         const db = client.db("chat");
-        console.log("body-->", req.body)
 
-        const data = await db.collection('Test').insertOne({
-            name: req.body.name
+        const data = await db.collection('users').insertOne({
+            ...req.body
         })
-
         return res.json(data)
     } catch (error) {
         console.log('error', error)

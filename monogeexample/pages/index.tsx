@@ -1,10 +1,15 @@
 import Head from "next/head";
 import clientPromise from "../lib/mongodb";
+import { useRouter } from "next/router";
 import { InferGetServerSidePropsType } from "next";
+import { useEffect, useState } from "react";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 export async function getServerSideProps(context: any) {
   try {
     await clientPromise;
+
     // `await clientPromise` will use the default database passed in the MONGODB_URI
     // However you can use another database (e.g. myDatabase) by replacing the `await clientPromise` with the following code:
     //
@@ -14,10 +19,10 @@ export async function getServerSideProps(context: any) {
     // Then you can execute queries against your database like so:
     // db.find({}) or any of the MongoDB Node Driver commands
     const res = await fetch(`${process.env.API_URL}/api/users`);
-    const data = await res.json();
+    const result = await res.json();
 
     return {
-      props: { isConnected: true, data: data },
+      props: { isConnected: true, result: result },
     };
   } catch (e) {
     console.error(e);
@@ -29,22 +34,41 @@ export async function getServerSideProps(context: any) {
 
 export default function Home({
   isConnected,
-  data,
+  result,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+  const [textValue, setTextValue] = useState({
+    text: "",
+  });
+
   const createName = async (e: any) => {
     e.preventDefault();
+
     const res = await fetch(`api/name`, {
       method: "POST",
       headers: {
         "content-type": "Application/Json",
       },
+
       body: JSON.stringify({
-        name: "parth",
+        name: textValue.text,
+        email: "emoji@gmail.com",
+        password: "123456",
+        role: "user",
       }),
     });
 
     const data = await res.json();
+    if (data.acknowledged) refreshData();
   };
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
+  useEffect(() => {
+    console.log("value--->", textValue);
+  }, [textValue]);
 
   return (
     <div className="container">
@@ -61,11 +85,37 @@ export default function Home({
         >
           Create Name
         </button>
+
+        <label>Type</label>
+        <input
+          id="text"
+          type="text"
+          value={textValue.text}
+          onChange={(e: any) => {
+            setTextValue((prev) => ({
+              ...prev,
+              [e.target.id]: e.target.value,
+            }));
+          }}
+        />
+
+        {/* to enter emoji with text */}
+        <Picker
+          data={data}
+          id={data.id}
+          onEmojiSelect={(e) =>
+            setTextValue((prev) => ({
+              ...prev,
+              text: textValue.text + e.native,
+            }))
+          }
+        />
+
         <h1 className="title">
           Welcome to <a href="https://nextjs.org">Next.js with MongoDB!</a>
         </h1>
-        {data?.map((data: any) => (
-          <h5>{data.name}</h5>
+        {result?.map((data: any) => (
+          <h5 key={data._id}>{data.name}</h5>
         ))}
 
         {isConnected ? (
